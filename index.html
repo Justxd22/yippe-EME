@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Coordinates</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: black; /* Light grey background */
+            color: #828282; /* Light grey text color */
+        }
+
+        .centered-text {
+            font-size: 3rem;
+            text-align: center;
+        }
+        .gif {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+        }
+
+        .nay{
+	font-weight: 700;
+	font-size: 3.5rem;
+	background: -webkit-linear-gradient(left, #02add8,#dbd249,#ff3aa3,#F57170 , #10DDC2);
+	background-size: 1600px 200px;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	animation-fill-mode: forwards;
+	animation: gg 5s  infinite alternate;
+}
+
+@keyframes gg {
+	0% {
+		background-position: 0 1600px;
+	}
+	100% {
+		background-position: 1600px 0;
+	}
+  }
+  
+  .center {
+	margin: 0;
+	position: absolute;
+	top: 70%;
+	left: 50%;
+	-ms-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%) scale(1.5);
+  
+}
+    </style>
+</head>
+<body>
+    <div class="centered-text">
+        <p>Click screen to start</p>
+    </div>
+    <div id="bb" style="color: rgb(255, 166, 166); text-align: center; z-index: 9999; display: none;" class="center">
+    <p>Happy 17th birthday</p>
+    <p class="nay">Nayon!</p>
+    </div>
+
+    <script>
+        async function preloadResource(url) {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            return URL.createObjectURL(blob);
+        }
+
+        const gifUrl = 'yepii.gif'; 
+        const audioUrl = 'yippee.mp3'; 
+        let cachedGifUrl;
+        let cachedAudioUrl;
+        let x = 0;
+        let y = 0;
+
+        Promise.all([preloadResource(gifUrl), preloadResource(audioUrl)])
+            .then(([gifObjectUrl, audioObjectUrl]) => {
+                cachedGifUrl = gifObjectUrl;
+                cachedAudioUrl = audioObjectUrl;
+                console.log('GIF and audio preloaded and cached');
+            });
+    
+        function getRandomCoordinate() {
+            // Get the screen width and height
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            // Generate random x and y coordinates within the screen size
+            let randomX = Math.floor(Math.random() * screenWidth) - 50;
+            let randomY = Math.floor(Math.random() * screenHeight) - 50;
+
+            // Ensure coordinates are non-negative
+            randomX = Math.max(0, randomX);
+            randomY = Math.max(0, randomY);
+
+            return { x: randomX, y: randomY };
+        }
+
+        function placeDotAtRandomCoordinateONCE() {
+            y+=1;
+            if (y == 10){
+                setTimeout(placeDotAtRandomCoordinate, 1000);
+                return;
+            }
+            if (!cachedGifUrl) {
+                console.error('GIF not loaded yet');
+                return;
+            }
+
+            const randomCoordinate = getRandomCoordinate();
+
+            // Create a new img element for the GIF
+            const newGif = document.createElement('img');
+            newGif.src = cachedGifUrl;  // Use the cached GIF URL
+            newGif.alt = 'Random GIF';
+            newGif.classList.add('gif');
+
+            // Set the position of the new GIF
+            newGif.style.left = randomCoordinate.x + 'px';
+            newGif.style.top = randomCoordinate.y + 'px';
+
+            // Append the new GIF to the body
+            document.body.appendChild(newGif);
+            const audio = new Audio(cachedAudioUrl);
+            audio.play();
+            console.log(x, window.innerWidth, window.innerHeight, randomCoordinate.x, randomCoordinate.y);
+            
+            // Call the function recursively after a timeout
+        }
+
+        function placeDotAtRandomCoordinate() {
+            x+=1;
+            if (x == 99){
+                setTimeout(fff, 5000);
+                return;
+            }
+            if (!cachedGifUrl) {
+                console.error('GIF not loaded yet');
+                return;
+            }
+
+            const randomCoordinate = getRandomCoordinate();
+
+            // Create a new img element for the GIF
+            const newGif = document.createElement('img');
+            newGif.src = cachedGifUrl;  // Use the cached GIF URL
+            newGif.alt = 'Random GIF';
+            newGif.classList.add('gif');
+
+            // Set the position of the new GIF
+            newGif.style.left = randomCoordinate.x + 'px';
+            newGif.style.top = randomCoordinate.y + 'px';
+
+            // Append the new GIF to the body
+            document.body.appendChild(newGif);
+            const audio = new Audio(cachedAudioUrl);
+            audio.loop = true;
+            audio.play();
+            console.log(x, window.innerWidth, window.innerHeight, randomCoordinate.x, randomCoordinate.y);
+            
+            // Call the function recursively after a timeout
+            setTimeout(placeDotAtRandomCoordinate, 200);
+        }
+
+        function fff(){
+            var bb = document.getElementById("bb")
+            bb.style.display = "block";
+            const audio = new Audio(cachedAudioUrl);
+            audio.loop = true;
+            audio.play();
+            console.log("@@@@")
+        }
+    document.body.addEventListener('click', placeDotAtRandomCoordinateONCE);
+    </script>
+</body>
+</html>
